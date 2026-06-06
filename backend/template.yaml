@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Confluence client API backend (FastAPI on AWS Lambda)
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Runtime: python3.13
+    Architectures:
+      - arm64
+
+Parameters:
+  ConfluenceBaseUrl:
+    Type: String
+    Description: Confluence Cloud base URL, e.g. https://your-domain.atlassian.net/wiki
+  ConfluenceEmail:
+    Type: String
+    Description: Atlassian account email associated with the API token
+  ConfluenceApiToken:
+    Type: String
+    Description: Atlassian API token
+    NoEcho: true
+  RegistrationPassword:
+    Type: String
+    Description: Password protecting the registration screen
+    Default: M@dhuri8797
+    NoEcho: true
+  CorsOrigins:
+    Type: String
+    Description: Comma-separated allowed CORS origins
+    Default: https://wiki.tarun.win,http://localhost:4200
+
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.main.handler
+      Description: Confluence Client API
+      Environment:
+        Variables:
+          CONFLUENCE_BASE_URL: !Ref ConfluenceBaseUrl
+          CONFLUENCE_EMAIL: !Ref ConfluenceEmail
+          CONFLUENCE_API_TOKEN: !Ref ConfluenceApiToken
+          REGISTRATION_PASSWORD: !Ref RegistrationPassword
+          CORS_ORIGINS: !Ref CorsOrigins
+      FunctionUrlConfig:
+        AuthType: NONE
+        InvokeMode: BUFFERED
+
+Outputs:
+  ApiUrl:
+    Description: Public Function URL for the API (set this in the GitHub Pages env)
+    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref ApiFunction

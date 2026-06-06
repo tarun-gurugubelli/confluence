@@ -1,0 +1,15 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "confluence-client-api"
+resolve_s3 = true
+s3_prefix = "confluence-client-api"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+disable_rollback = false
+parameter_overrides = "ConfluenceBaseUrl=\"https://tarungurugubelli.atlassian.net/wiki\" ConfluenceEmail=\"tarun.gurugubelli@icloud.com\" CorsOrigins=\"https://wiki.tarun.win,http://localhost:4200\""
+image_repositories = []
+
+[default.global.parameters]
+region = "us-east-1"
