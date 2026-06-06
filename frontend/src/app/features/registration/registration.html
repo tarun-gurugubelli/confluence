@@ -1,10 +1,10 @@
 <section class="flex flex-1 min-h-0 overflow-hidden">
-  <div class="scroll-thin flex-1 overflow-y-auto px-6 py-8">
+  <div class="scroll-thin flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
     @if (!auth.isAuthed()) {
       <!-- Password gate -->
-      <div class="mx-auto mt-12 max-w-sm">
+      <div class="mx-auto mt-8 max-w-sm sm:mt-12">
         <div
-          class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-800"
         >
           <h1 class="mb-1 text-lg font-semibold text-slate-900 dark:text-slate-50">
             Protected area
@@ -40,10 +40,10 @@
       </div>
     } @else {
       <!-- Forms -->
-      <div class="mx-auto max-w-3xl space-y-6">
-        <div class="flex items-center justify-between">
+      <div class="mx-auto max-w-3xl space-y-5 sm:space-y-6">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-50">
+            <h1 class="text-lg font-semibold text-slate-900 sm:text-xl dark:text-slate-50">
               Register content
             </h1>
             <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -53,7 +53,7 @@
           <button
             type="button"
             (click)="logout()"
-            class="rounded border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
+            class="self-start rounded border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 sm:self-auto dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
           >Sign out</button>
         </div>
 
@@ -68,12 +68,12 @@
 
         <!-- Create Space -->
         <section
-          class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          class="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-700 dark:bg-slate-800"
         >
           <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Create space
           </h2>
-          <form (ngSubmit)="submitSpace()" class="grid grid-cols-2 gap-3">
+          <form (ngSubmit)="submitSpace()" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Key
@@ -98,7 +98,7 @@
                 class="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div class="col-span-2">
+            <div class="sm:col-span-2">
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Description (optional)
               </label>
@@ -109,7 +109,7 @@
                 class="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div class="col-span-2 flex items-center justify-between">
+            <div class="flex flex-col gap-2 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               @if (spaceMessage(); as m) {
                 <span
                   class="text-xs"
@@ -118,11 +118,11 @@
                   [class.text-rose-600]="m.kind === 'error'"
                   [class.dark:text-rose-300]="m.kind === 'error'"
                 >{{ m.text }}</span>
-              } @else { <span></span> }
+              } @else { <span class="hidden sm:inline"></span> }
               <button
                 type="submit"
                 [disabled]="creatingSpace()"
-                class="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                class="w-full rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 sm:w-auto dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
               >
                 {{ creatingSpace() ? 'Creating...' : 'Create space' }}
               </button>
@@ -132,12 +132,12 @@
 
         <!-- Create Folder -->
         <section
-          class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          class="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-700 dark:bg-slate-800"
         >
           <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Create folder
           </h2>
-          <form (ngSubmit)="submitFolder()" class="grid grid-cols-2 gap-3">
+          <form (ngSubmit)="submitFolder()" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Space
@@ -168,7 +168,7 @@
                 }
               </select>
             </div>
-            <div class="col-span-2">
+            <div class="sm:col-span-2">
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Title
               </label>
@@ -179,7 +179,7 @@
                 class="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div class="col-span-2 flex items-center justify-between">
+            <div class="flex flex-col gap-2 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               @if (folderMessage(); as m) {
                 <span
                   class="text-xs"
@@ -188,11 +188,11 @@
                   [class.text-rose-600]="m.kind === 'error'"
                   [class.dark:text-rose-300]="m.kind === 'error'"
                 >{{ m.text }}</span>
-              } @else { <span></span> }
+              } @else { <span class="hidden sm:inline"></span> }
               <button
                 type="submit"
                 [disabled]="creatingFolder()"
-                class="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                class="w-full rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 sm:w-auto dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
               >
                 {{ creatingFolder() ? 'Creating...' : 'Create folder' }}
               </button>
@@ -202,12 +202,12 @@
 
         <!-- Create Page -->
         <section
-          class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800"
+          class="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 dark:border-slate-700 dark:bg-slate-800"
         >
           <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Create page
           </h2>
-          <form (ngSubmit)="submitPage()" class="grid grid-cols-2 gap-3">
+          <form (ngSubmit)="submitPage()" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Space
@@ -238,7 +238,7 @@
                 }
               </select>
             </div>
-            <div class="col-span-2">
+            <div class="sm:col-span-2">
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Title
               </label>
@@ -249,19 +249,19 @@
                 class="w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
-            <div class="col-span-2">
+            <div class="sm:col-span-2">
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                 Body (HTML / Confluence storage format)
               </label>
               <textarea
                 name="page-body"
-                rows="8"
+                rows="6"
                 [(ngModel)]="pageForm.body_html"
                 placeholder="&lt;h1&gt;Title&lt;/h1&gt;&lt;p&gt;Content...&lt;/p&gt;"
-                class="w-full rounded border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-800 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                class="w-full rounded border border-slate-300 bg-white px-3 py-2 font-mono text-xs text-slate-800 outline-none focus:border-slate-500 sm:text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               ></textarea>
             </div>
-            <div class="col-span-2 flex items-center justify-between">
+            <div class="flex flex-col gap-2 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               @if (pageMessage(); as m) {
                 <span
                   class="text-xs"
@@ -270,11 +270,11 @@
                   [class.text-rose-600]="m.kind === 'error'"
                   [class.dark:text-rose-300]="m.kind === 'error'"
                 >{{ m.text }}</span>
-              } @else { <span></span> }
+              } @else { <span class="hidden sm:inline"></span> }
               <button
                 type="submit"
                 [disabled]="creatingPage()"
-                class="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+                class="w-full rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-60 sm:w-auto dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
               >
                 {{ creatingPage() ? 'Creating...' : 'Create page' }}
               </button>

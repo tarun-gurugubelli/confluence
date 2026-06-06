@@ -1,7 +1,20 @@
-<section class="flex flex-1 min-h-0">
-  <!-- Sidebar -->
+<section class="relative flex flex-1 min-h-0">
+  <!-- Backdrop (mobile only when drawer open) -->
+  @if (sidebarOpen()) {
+    <button
+      type="button"
+      (click)="sidebarOpen.set(false)"
+      aria-label="Close spaces panel"
+      class="fixed inset-x-0 bottom-0 top-14 z-30 bg-slate-900/40 md:hidden"
+    ></button>
+  }
+
+  <!-- Sidebar: fixed slide-in drawer on mobile, static column on md+ -->
   <aside
-    class="flex w-72 shrink-0 flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+    class="fixed bottom-0 left-0 top-14 z-40 flex w-72 max-w-[85vw] shrink-0 flex-col border-r border-slate-200 bg-white shadow-xl transition-transform duration-200 ease-out dark:border-slate-700 dark:bg-slate-800 md:static md:top-auto md:bottom-auto md:w-64 md:max-w-none md:shadow-none md:transition-none lg:w-72"
+    [class.translate-x-0]="sidebarOpen()"
+    [class.-translate-x-full]="!sidebarOpen()"
+    [class.md:translate-x-0]="true"
   >
     <div
       class="flex items-center justify-between border-b border-slate-200 px-3 py-2.5 dark:border-slate-700"
@@ -9,19 +22,32 @@
       <span
         class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
       >Spaces</span>
-      <button
-        type="button"
-        (click)="reload()"
-        title="Reload"
-        class="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
-          <path d="M3 12a9 9 0 0 1 15.5-6.4L21 8" />
-          <path d="M21 3v5h-5" />
-          <path d="M21 12a9 9 0 0 1-15.5 6.4L3 16" />
-          <path d="M3 21v-5h5" />
-        </svg>
-      </button>
+      <div class="flex items-center gap-1">
+        <button
+          type="button"
+          (click)="reload()"
+          title="Reload"
+          aria-label="Reload"
+          class="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <path d="M3 12a9 9 0 0 1 15.5-6.4L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-15.5 6.4L3 16" />
+            <path d="M3 21v-5h5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          (click)="sidebarOpen.set(false)"
+          aria-label="Close spaces panel"
+          class="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 md:hidden dark:hover:bg-slate-700 dark:hover:text-slate-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div class="scroll-thin flex-1 overflow-y-auto px-2 py-2">
@@ -47,6 +73,23 @@
 
   <!-- Content -->
   <div class="flex flex-1 min-h-0 flex-col overflow-hidden">
+    <!-- Mobile-only toolbar: hamburger to open the sidebar drawer -->
+    <div
+      class="flex items-center gap-2 border-b border-slate-200 bg-white px-3 py-2 md:hidden dark:border-slate-700 dark:bg-slate-800"
+    >
+      <button
+        type="button"
+        (click)="toggleSidebar()"
+        aria-label="Open spaces panel"
+        class="inline-flex items-center gap-1.5 rounded px-2 py-1 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        Spaces
+      </button>
+    </div>
+
     @if (!backendConfigured()) {
       <div
         class="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200"
@@ -59,7 +102,7 @@
       </div>
     }
 
-    <div class="scroll-thin flex-1 overflow-y-auto px-8 py-6">
+    <div class="scroll-thin flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       @if (loadingPage()) {
         <div class="text-sm text-slate-500 dark:text-slate-400">Loading page...</div>
       } @else if (pageError()) {
@@ -68,13 +111,13 @@
         </div>
       } @else if (pageDetail(); as p) {
         <article class="mx-auto max-w-3xl">
-          <h1 class="mb-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+          <h1 class="mb-3 break-words text-2xl font-semibold tracking-tight text-slate-900 sm:mb-4 sm:text-3xl dark:text-slate-50">
             {{ p.title }}
           </h1>
           <div class="page-content" [innerHTML]="safeBody()"></div>
         </article>
       } @else {
-        <div class="mx-auto mt-24 max-w-md text-center">
+        <div class="mx-auto mt-16 max-w-md px-4 text-center sm:mt-24">
           <div class="mx-auto mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 dark:border-slate-700 dark:text-slate-400">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
               <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
@@ -83,7 +126,8 @@
           </div>
           <h2 class="text-base font-medium text-slate-800 dark:text-slate-200">Select a page</h2>
           <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Pick a page from the left navigation to view its content.
+            <span class="md:hidden">Tap "Spaces" above to pick a page.</span>
+            <span class="hidden md:inline">Pick a page from the left navigation to view its content.</span>
           </p>
         </div>
       }
