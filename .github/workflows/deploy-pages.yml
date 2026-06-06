@@ -1,0 +1,69 @@
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Configure production API base URL
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+        run: |
+          if [ -z "$API_BASE_URL" ]; then
+            echo "::warning::API_BASE_URL repository variable is not set; the deployed app will not be able to reach the backend."
+            API_BASE_URL=""
+          fi
+          cat > src/environments/environment.prod.ts <<EOF
+          export const environment = {
+            production: true,
+            apiBase: '${API_BASE_URL}',
+          };
+          EOF
+
+      - name: Build
+        run: npm run build -- --base-href=/
+
+      - name: Add SPA 404 fallback
+        run: cp dist/frontend/browser/index.html dist/frontend/browser/404.html
+
+      - name: Disable Jekyll on GitHub Pages
+        run: touch dist/frontend/browser/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist/frontend/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
