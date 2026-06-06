@@ -3,9 +3,6 @@
 /* Enable class-based dark mode via custom variant. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Enable class-based dark mode via custom variant. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root { color-scheme: light; }
 .dark { color-scheme: dark; }
 
@@ -24,15 +21,30 @@ body {
 }
 
 /* Rendered page body (Confluence storage / HTML). */
-.page-content { line-height: 1.65; }
+.page-content {
+  line-height: 1.65;
+  /* Prevent inline children from forcing the container wider than its
+     flex parent and triggering horizontal page scroll. */
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+}
 .page-content h1 { font-size: 1.65rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
 .page-content h2 { font-size: 1.3rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
 .page-content h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.page-content h1,
+.page-content h2,
+.page-content h3 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
 .page-content p  { margin: 0 0 0.85rem; }
 .page-content ul { list-style: disc; padding-left: 1.5rem; margin: 0 0 0.85rem; }
 .page-content ol { list-style: decimal; padding-left: 1.5rem; margin: 0 0 0.85rem; }
 .page-content li { margin: 0.15rem 0; }
-.page-content a  { color: rgb(2 132 199); text-decoration: underline; }
+.page-content a  { color: rgb(2 132 199); text-decoration: underline; overflow-wrap: anywhere; }
 .dark .page-content a { color: rgb(125 211 252); }
 .page-content code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -40,6 +52,7 @@ body {
   padding: 0.1rem 0.3rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
+  word-break: break-word;
 }
 .dark .page-content code { background: rgb(30 41 59); }
 .page-content pre {
@@ -47,8 +60,16 @@ body {
   background: rgb(241 245 249);
   padding: 0.85rem;
   border-radius: 0.4rem;
-  overflow: auto;
+  overflow-x: auto;
+  max-width: 100%;
+  white-space: pre;
   margin: 0 0 0.85rem;
+}
+.page-content pre code {
+  background: transparent;
+  padding: 0;
+  white-space: inherit;
+  word-break: normal;
 }
 .dark .page-content pre { background: rgb(30 41 59); }
 .page-content blockquote {
@@ -61,8 +82,36 @@ body {
   border-left-color: rgb(71 85 105);
   color: rgb(148 163 184);
 }
-.page-content table { border-collapse: collapse; width: 100%; margin: 0 0 0.85rem; font-size: 0.9em; }
-.page-content th, .page-content td { border: 1px solid rgb(203 213 225); padding: 0.4rem 0.6rem; text-align: left; }
+
+/* Media: never let images / embeds push the layout wider than the column. */
+.page-content img,
+.page-content video,
+.page-content iframe,
+.page-content embed,
+.page-content object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Tables: become a horizontally scrollable block on narrow screens so a
+   wide Confluence table doesn't blow out the layout. */
+.page-content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 0 0 0.85rem;
+  font-size: 0.9em;
+}
+.page-content th,
+.page-content td {
+  border: 1px solid rgb(203 213 225);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  word-break: break-word;
+}
 .dark .page-content th, .dark .page-content td { border-color: rgb(51 65 85); }
 .page-content th { background: rgb(241 245 249); font-weight: 600; }
 .dark .page-content th { background: rgb(30 41 59); }

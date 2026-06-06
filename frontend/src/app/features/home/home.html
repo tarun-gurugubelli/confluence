@@ -110,11 +110,11 @@
           {{ pageError() }}
         </div>
       } @else if (pageDetail(); as p) {
-        <article class="mx-auto max-w-3xl">
+        <article class="mx-auto w-full min-w-0 max-w-3xl">
           <h1 class="mb-3 break-words text-2xl font-semibold tracking-tight text-slate-900 sm:mb-4 sm:text-3xl dark:text-slate-50">
             {{ p.title }}
           </h1>
-          <div class="page-content" [innerHTML]="safeBody()"></div>
+          <div class="page-content w-full min-w-0" [innerHTML]="safeBody()"></div>
         </article>
       } @else {
         <div class="mx-auto mt-16 max-w-md px-4 text-center sm:mt-24">
