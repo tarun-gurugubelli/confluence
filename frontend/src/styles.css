@@ -9,6 +9,9 @@
 html, body { height: 100%; }
 body {
   margin: 0;
+  /* Internal scroll containers do all the scrolling; this keeps the sticky
+     header and the sidebar pinned in place as you scroll a page. */
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   -webkit-font-smoothing: antialiased;

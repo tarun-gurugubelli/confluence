@@ -27,9 +27,9 @@ export class Home implements OnInit {
   treeError = signal<string | null>(null);
   pageError = signal<string | null>(null);
 
-  // Controls the mobile slide-in sidebar. Ignored on md+ screens
-  // where the sidebar is always visible.
-  sidebarOpen = signal(false);
+  // Controls the sidebar's visibility on every screen size.
+  // Defaults to open on md+ viewports and closed on phones.
+  sidebarOpen = signal<boolean>(this.isDesktopViewport());
 
   safeBody = computed<SafeHtml>(() =>
     this.sanitizer.bypassSecurityTrustHtml(this.pageDetail()?.body_html ?? ''),
@@ -75,7 +75,12 @@ export class Home implements OnInit {
   onSelectPage(node: TreeNodeModel): void {
     if (node.type !== 'page') return;
     this.selectedPageId.set(node.id);
-    this.sidebarOpen.set(false); // auto-close drawer on mobile after selection
+    // On phones the sidebar covers the content as a drawer, so auto-close it
+    // after a selection. On desktop, leave it open so the user can keep
+    // navigating.
+    if (!this.isDesktopViewport()) {
+      this.sidebarOpen.set(false);
+    }
     this.loadingPage.set(true);
     this.pageError.set(null);
     this.pageDetail.set(null);
@@ -97,6 +102,13 @@ export class Home implements OnInit {
 
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
+  }
+
+  private isDesktopViewport(): boolean {
+    return (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width: 768px)').matches
+    );
   }
 
   private errorMessage(err: unknown): string {
